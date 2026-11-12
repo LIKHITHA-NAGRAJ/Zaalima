@@ -1,0 +1,27 @@
+Distance: 47.32 cm
+Angle: 90 degrees | Distance: 47.32 cm
+Angle: 90 degrees | Distance: 48.41 cm
+Angle: 90 degrees | Distance: 48.41 cm
+Angle: 90 degrees | Distance: 43.49 cm
+Angle: 90 degrees | Distance: 8.03 cm
+Angle: 150 degrees | Distance: 334.18 cm
+Angle: 30 degrees | Distance: 333.45 cm
+Direction: LEFT
+Angle: 90 degrees | Distance: 333.45 cm
+Angle: 90 degrees | Distance: 333.45 cm
+Angle: 90 degrees | Distance: 333.45 cm
+Angle: 90 degrees | Distance: 333.41 cm
+Angle: 90 degrees | Distance: 333.41 cm
+Angle: 90 degrees | Distance: 333.45 cm
+Angle: 90 degrees | Distance: 333.45 cm
+Angle: 90 degrees | Distance: 333.41 cm
+Angle: 90 degrees | Distance: 333.31 cm
+Angle: 90 degrees | Distance: 334.22 cm
+Angle: 90 degrees | Distance: 13.07 cm
+Angle: 150 degrees | Distance: 15.66 cm
+Angle: 30 degrees | Distance: 14.17 cm
+Direction: LEFT
+Angle: 90 degrees | Distance: 10.24 cm
+Angle: 150 degrees | Distance: 9.52 cm
+Angle: 30 degrees | Distance: 10.24 cm
+Direction: RIGHT
