@@ -1,0 +1,163 @@
+#include <Servo.h>
+
+Servo scanServo;
+
+// L293D motor driver pins
+const int ENA = 5;
+const int IN1 = 4;
+const int IN2 = 7;
+
+const int ENB = 6;
+const int IN3 = 8;
+const int IN4 = 12;
+
+// Ultrasonic sensor pins
+const int TRIG = 2;
+const int ECHO = 13;
+
+// Servo pin
+const int SERVO_PIN = 3;
+
+// Settings
+const int MOTOR_SPEED = 150;
+const int OBSTACLE_DISTANCE = 25;
+
+// Read ultrasonic distance
+float readDistance() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duration = pulseIn(ECHO, HIGH, 30000);
+
+  if (duration == 0) {
+    return 400;
+  }
+
+  return duration * 0.0343 / 2;
+}
+
+// Scan at a particular angle
+float scanAtAngle(int angle) {
+  scanServo.write(angle);
+  delay(500);
+
+  float distance = readDistance();
+
+  Serial.print("Angle: ");
+  Serial.print(angle);
+  Serial.print(" degrees | Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  return distance;
+}
+
+// Stop motors
+void stopMotors() {
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+}
+
+// Move forward
+void moveForward() {
+  analogWrite(ENA, MOTOR_SPEED);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+
+  analogWrite(ENB, MOTOR_SPEED);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+// Turn left
+void turnLeft() {
+  analogWrite(ENA, MOTOR_SPEED);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+
+  analogWrite(ENB, MOTOR_SPEED);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+// Turn right
+void turnRight() {
+  analogWrite(ENA, MOTOR_SPEED);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+
+  analogWrite(ENB, MOTOR_SPEED);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+void setup() {
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+
+  pinMode(ENB, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  scanServo.attach(SERVO_PIN);
+
+  Serial.begin(9600);
+
+  scanServo.write(90);
+  stopMotors();
+
+  Serial.println("ROVER STARTED");
+  Serial.println("-------------------------");
+}
+
+void loop() {
+
+  // Front scan
+  float front = scanAtAngle(90);
+
+  if (front > OBSTACLE_DISTANCE) {
+    moveForward();
+    Serial.println("Direction: FORWARD");
+  }
+  else {
+    stopMotors();
+    Serial.println("OBSTACLE DETECTED");
+
+    // Scan left and right
+    float left = scanAtAngle(150);
+    float right30 = scanAtAngle(30);
+    float right15 = scanAtAngle(15);
+
+    // Select the clearest side
+    float right = max(right30, right15);
+
+    Serial.println("-------------------------");
+
+    if (left > right && left > OBSTACLE_DISTANCE) {
+      Serial.println("Direction: LEFT");
+      turnLeft();
+    }
+    else if (right > OBSTACLE_DISTANCE) {
+      Serial.println("Direction: RIGHT");
+      turnRight();
+    }
+    else {
+      Serial.println("Direction: STOP - No clear path");
+      stopMotors();
+    }
+
+    delay(600);
+    stopMotors();
+  }
+
+  Serial.println("-------------------------");
+  delay(200);
+}
