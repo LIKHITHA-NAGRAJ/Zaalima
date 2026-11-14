@@ -1,0 +1,32 @@
+#include <math.h>
+
+const float MAX_RANGE = 200.0;
+
+// PLACEHOLDER distances in cm for 0, 15, 30 ... 180 degrees
+const float distances[13] = {40, 38, 35, 33, 31, 30, 29, 30, 31, 33, 36, 333, 45};
+
+void polarToXY(float angleDeg, float r, float &x, float &y) {
+  float theta = angleDeg * DEG_TO_RAD;
+  x = r * cos(theta);
+  y = r * sin(theta);
+}
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("x,y");
+  for (int i = 0; i < 13; i++) {
+    float angle = i * 15;
+    float r = distances[i];
+    if (r > MAX_RANGE) {
+      continue;
+    }
+    float x, y;
+    polarToXY(angle, r, x, y);
+    Serial.print(x, 2);
+    Serial.print(",");
+    Serial.println(y, 2);
+  }
+}
+
+void loop() {
+}
